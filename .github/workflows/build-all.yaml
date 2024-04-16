@@ -6,6 +6,9 @@ on:
 jobs:
   build-hd-idle:
     uses: ./.github/workflows/build-image.yaml
+    permissions:
+      contents: read
+      packages: write
     with:
       imageName: hd-idle
 
