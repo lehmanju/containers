@@ -1,0 +1,11 @@
+name: Build and deploy images
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-hd-idle:
+    uses: ./.github/workflows/build-image.yaml
+    with:
+      imageName: hd-idle
+

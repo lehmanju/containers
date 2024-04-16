@@ -1,0 +1,7 @@
+FROM ubuntu:latest
+
+
+RUN curl -L -O https://github.com/adelolmo/hd-idle/releases/download/v1.21/hd-idle_1.21_amd64.deb
+RUN apt update && dpkg --install hd-idle_1.21_amd64.deb && rm hd-idle_1.21_amd64.deb
+
+ENTRYPOINT [ "hd-idle" ]
