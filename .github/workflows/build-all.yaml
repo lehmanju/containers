@@ -11,4 +11,10 @@ jobs:
       packages: write
     with:
       imageName: hd-idle
-
+  build-tuned:
+    uses: ./.github/workflows/build-image.yaml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      imageName: tuned
