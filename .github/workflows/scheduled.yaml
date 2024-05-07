@@ -29,4 +29,3 @@ jobs:
         with:
             appsToBuild: "${{ needs.get-changed-images.outputs.addedOrModifiedImages }}"
             pushImages: true
-            sendNotifications: true
