@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Build and publish Container images
+
+on:
+  workflow_call:
+    inputs:
+      appsToBuild:
+        required: false
+        type: string
+        default: ""
+      pushImages:
+        required: false
+        default: false
+        type: boolean
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        image:
+          ["${{ fromJSON(inputs.appsToBuild) }}"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2.13
+        with:
+          image: ${{ github.repository }}/${{ matrix.image }}
+          tags: latest ${{ github.sha }}
+          containerfiles: |
+            ./images/${{ matrix.image }}/Containerfile
+  
+      - name: Push To github repo
+        id: push-to-github
+        if: ${{ inputs.pushImages }}
+        uses: redhat-actions/push-to-registry@v2.8
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}

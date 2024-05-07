@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Build and deploy images
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: container-release
+  cancel-in-progress: false
+
+jobs:
+  get-changed-images:
+    uses: lehmanju/containers/.github/workflows/get-changed-images.yaml@main
+
+  build-images:
+    needs: ["get-changed-images"]
+    if: ${{ needs.get-changed-images.outputs.addedOrModified == 'true' }}
+    uses: lehmanju/containers/.github/workflows/build-images.yaml@main
+    secrets: inherit
+    with:
+      appsToBuild: "${{ needs.get-changed-images.outputs.addedOrModifiedImages }}"
+      pushImages: true
+      sendNotifications: true
