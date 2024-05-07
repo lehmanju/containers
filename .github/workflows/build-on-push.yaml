@@ -14,6 +14,9 @@ jobs:
     uses: lehmanju/containers/.github/workflows/get-changed-images.yaml@main
 
   build-images:
+    permissions:
+      contents: read
+      packages: write
     needs: ["get-changed-images"]
     if: ${{ needs.get-changed-images.outputs.addedOrModified == 'true' }}
     uses: lehmanju/containers/.github/workflows/build-images.yaml@main
