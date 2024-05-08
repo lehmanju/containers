@@ -35,7 +35,7 @@ jobs:
           image: ${{ github.repository }}/${{ matrix.image }}
           tags: latest ${{ github.sha }}
           containerfiles: |
-            Containerfile
+            ./images/${{ matrix.image }}/Containerfile
   
       - name: Push To github repo
         id: push-to-github
