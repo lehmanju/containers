@@ -17,18 +17,13 @@ on:
     schedule:
     - cron: "0 * * * *"
 
-jobs:
-    get-changed-images:
-        uses: lehmanju/containers/.github/workflows/get-changed-images.yaml@main
-    
+jobs:    
     build-images:
         permissions:
             contents: read
             packages: write
-        needs: ["get-changed-images"]
-        if: ${{ needs.get-changed-images.outputs.addedOrModified == 'true' }}
         uses: lehmanju/containers/.github/workflows/build-images.yaml@main
         secrets: inherit
         with:
-            appsToBuild: "${{ needs.get-changed-images.outputs.addedOrModifiedImages }}"
+            appsToBuild: "${{ inputs.appsToBuild }}"
             pushImages: true
