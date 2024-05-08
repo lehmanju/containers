@@ -1,3 +1,5 @@
 FROM alpine:latest
 
-COPY script.py 
+COPY script.py /app/script.py
+
+ENTRYPOINT script.py

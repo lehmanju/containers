@@ -3,27 +3,27 @@
 name: Scheduled Release
 
 concurrency:
-    group: container-release
-    cancel-in-progress: false
+  group: container-release
+  cancel-in-progress: false
 
 on:
-    workflow_dispatch:
-        inputs:
-            appsToBuild:
-                description: App(s) to build
-                required: false
-                type: string
-                default: all
-    schedule:
-    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      appsToBuild:
+        description: App(s) to build
+        required: false
+        type: string
+        default: all
+  schedule:
+  - cron: "0 * * * *"
 
 jobs:    
-    build-images:
-        permissions:
-            contents: read
-            packages: write
-        uses: lehmanju/containers/.github/workflows/build-images.yaml@main
-        secrets: inherit
-        with:
-            appsToBuild: "${{ inputs.appsToBuild }}"
-            pushImages: true
+  build-images:
+    permissions:
+      contents: read
+      packages: write
+    uses: lehmanju/containers/.github/workflows/build-images.yaml@main
+    secrets: inherit
+    with:
+      appsToBuild: "${{ inputs.appsToBuild }}"
+      pushImages: true
