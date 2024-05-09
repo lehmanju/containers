@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Build and deploy images
+name: Build and deploy on push
 on:
   push:
     branches: [main]

@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Build and publish Container images
+name: Build and deploy images
 
 on:
   workflow_call:
