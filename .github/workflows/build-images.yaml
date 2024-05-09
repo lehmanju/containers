@@ -45,11 +45,11 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2.13
         with:
-          context: images/${{ matrix.image }}
+          context: ${{ github.workspace }}/images/${{ matrix.image }}
           image: ${{ matrix.image }}
           tags: latest ${{ github.sha }}
           containerfiles: |
-            ./images/${{ matrix.image }}/Containerfile
+            ${{ github.workspace }}/images/${{ matrix.image }}/Containerfile
   
       - name: Push To github repo
         id: push-to-github
