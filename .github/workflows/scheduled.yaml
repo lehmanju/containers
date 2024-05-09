@@ -13,9 +13,8 @@ on:
         description: App(s) to build
         required: false
         type: string
-        default: all
-  schedule:
-  - cron: "0 * * * *"
+#  schedule:
+#  - cron: "0 * * * *"
 
 jobs:    
   build-images:
