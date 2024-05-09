@@ -20,6 +20,9 @@ jobs:
     outputs:
       apps: "${{ steps.prep-apps.outputs.apps }}"
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Populate appsToBuild
         id: prep-apps
         shell: bash
@@ -37,9 +40,6 @@ jobs:
       matrix:
         image: ${{ fromJSON(needs.prepare-input.outputs.apps) }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Build Image
         id: build-image
         uses: redhat-actions/buildah-build@v2.13
