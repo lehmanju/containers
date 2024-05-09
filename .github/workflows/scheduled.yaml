@@ -66,7 +66,7 @@ jobs:
       packages: write
     steps:
       - name: Cleanup old containers
-        uses: actions/delete-package-version@v5
+        uses: actions/delete-package-versions@v5
         with:
           package-name: '${{ matrix.image }}'
           package-type: 'container'
