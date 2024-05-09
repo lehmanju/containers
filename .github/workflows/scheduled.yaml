@@ -9,20 +9,66 @@ concurrency:
 on:
   workflow_dispatch:
     inputs:
-      appsToBuild:
-        description: App(s) to build
+      apps:
+        description: App(s)
         required: false
         type: string
-#  schedule:
-#  - cron: "0 * * * *"
+      action:
+        description: Action
+        required: false
+        default: 'build'
+        type: choice
+        options:
+          - build
+          - clean
 
-jobs:    
+#  schedule:
+#  - cron: "0 1 * * *"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: "${{ steps.prep-apps.outputs.apps }}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Populate apps
+        id: prep-apps
+        shell: bash
+        run: |
+          IMAGES="$(find images -mindepth 1 -maxdepth 1 -type d -printf %f\\n | jq -R -s -c 'split("\n")[:-1]')"
+          INPUT="${{ inputs.apps }}"
+          echo "apps=${INPUT:-$IMAGES}" >> $GITHUB_OUTPUT
+
   build-images:
+    if: ${{ inputs.action == null || inputs.action == 'build' }}
     permissions:
       contents: read
       packages: write
     uses: lehmanju/containers/.github/workflows/build-images.yaml@main
+    needs: ["prepare"]
     secrets: inherit
     with:
-      appsToBuild: "${{ inputs.appsToBuild }}"
+      appsToBuild: "${{ needs.prepare.outputs.apps }}"
       pushImages: true
+
+  cleanup:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.action == null || inputs.action == 'clean' }}
+    needs: ["prepare"]
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.prepare.outputs.apps) }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Cleanup old containers
+        uses: actions/delete-package-version@v5
+        with:
+          package-name: '${{ matrix.image }}'
+          package-type: 'container'
+          min-versions-to-keep: 10
+          delete-only-untagged-versions: 'true'
