@@ -45,8 +45,8 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2.13
         with:
-          context: ./images/${{ matrix.image }}
-          image: ${{ github.repository }}/${{ matrix.image }}
+          context: images/${{ matrix.image }}
+          image: ${{ matrix.image }}
           tags: latest ${{ github.sha }}
           containerfiles: |
             ./images/${{ matrix.image }}/Containerfile
@@ -58,6 +58,6 @@ jobs:
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
-          registry: ghcr.io
+          registry: ghcr.io/${{ github.repository }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
