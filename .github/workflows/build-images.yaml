@@ -5,11 +5,11 @@ name: Build and deploy images
 on:
   workflow_call:
     inputs:
-      appsToBuild:
+      image:
         required: true
         type: string
-        default: "[]"
-      pushImages:
+        default: ""
+      push:
         required: false
         default: false
         type: boolean
@@ -20,11 +20,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ inputs.appsToBuild  != '[]' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{ fromJSON(inputs.appsToBuild) }}
+    if: ${{ inputs.image  != '' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,15 +29,16 @@ jobs:
         id: build-image
         uses: redhat-actions/buildah-build@v2.13
         with:
-          context: images/${{ matrix.image }}
-          image: ${{ matrix.image }}
+          context: images/${{ inputs.image }}
+          image: ${{ inputs.image }}
           tags: latest
+          extra-args: --timestamp=0
           containerfiles: |
-            images/${{ matrix.image }}/Containerfile
+            images/${{ inputs.image }}/Containerfile
   
       - name: Push To github repo
         id: push-to-github
-        if: ${{ inputs.pushImages }}
+        if: ${{ inputs.push }}
         uses: redhat-actions/push-to-registry@v2.8
         with:
           image: ${{ steps.build-image.outputs.image }}
