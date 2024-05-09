@@ -40,7 +40,7 @@ jobs:
         run: |
           IMAGES="$(find images -mindepth 1 -maxdepth 1 -type d -printf %f\\n | jq -R -s -c 'split("\n")[:-1]')"
           INPUT="${{ inputs.apps }}"
-          echo "apps=${$INPUT:-$IMAGES}" >> $GITHUB_OUTPUT
+          echo "apps=${INPUT:-$IMAGES}" >> $GITHUB_OUTPUT
 
   build-images:
     if: ${{ inputs.action == null || inputs.action == 'build' }}
@@ -60,7 +60,7 @@ jobs:
     needs: ["prepare"]
     strategy:
       matrix:
-        image: ${{ fromJSON(needs.prepare.outputs.apps) }}
+        image: "${{ fromJSON(needs.prepare.outputs.apps) }}"
     permissions:
       contents: read
       packages: write
