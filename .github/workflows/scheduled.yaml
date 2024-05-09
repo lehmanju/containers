@@ -38,8 +38,8 @@ jobs:
         id: prep-apps
         shell: bash
         run: |
-          IMAGES="$(find images -mindepth 1 -maxdepth 1 -type d -printf %f\\n | jq -R -s -c 'split("\n")[:-1]')"
-          INPUT="${{ inputs.apps }}"
+          IMAGES='$(find images -mindepth 1 -maxdepth 1 -type d -printf %f\\n | jq -R -s -c 'split("\n")[:-1]')'
+          INPUT='${{ inputs.apps }}'
           echo "apps=${INPUT:-$IMAGES}" >> $GITHUB_OUTPUT
 
   build-images:
