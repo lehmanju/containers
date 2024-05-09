@@ -22,8 +22,8 @@ on:
           - build
           - clean
 
-#  schedule:
-#  - cron: "0 1 * * *"
+  schedule:
+  - cron: "0 1 * * *"
 
 jobs:
   prepare:
@@ -59,6 +59,7 @@ jobs:
     if: ${{ inputs.action == null || inputs.action == 'clean' }}
     needs: ["prepare"]
     strategy:
+      fail-fast: false
       matrix:
         image: "${{ fromJSON(needs.prepare.outputs.apps) }}"
     permissions:

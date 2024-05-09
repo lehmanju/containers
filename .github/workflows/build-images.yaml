@@ -22,6 +22,7 @@ jobs:
       packages: write
     if: ${{ inputs.appsToBuild  != '[]' }}
     strategy:
+      fail-fast: false
       matrix:
         image: ${{ fromJSON(inputs.appsToBuild) }}
     steps:
