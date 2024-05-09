@@ -47,12 +47,16 @@ jobs:
     permissions:
       contents: read
       packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJSON(needs.prepare.outputs.apps) }}
     uses: lehmanju/containers/.github/workflows/build-images.yaml@main
     needs: ["prepare"]
     secrets: inherit
     with:
-      appsToBuild: "${{ needs.prepare.outputs.apps }}"
-      pushImages: true
+      image: "${{ matrix.image }}"
+      push: true
 
   cleanup:
     runs-on: ubuntu-latest
