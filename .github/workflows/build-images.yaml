@@ -41,6 +41,9 @@ jobs:
       matrix:
         image: ${{ fromJSON(needs.prepare-input.outputs.apps) }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Build Image
         id: build-image
         uses: redhat-actions/buildah-build@v2.13
