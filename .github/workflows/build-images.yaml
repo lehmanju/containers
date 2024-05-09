@@ -24,10 +24,8 @@ jobs:
         id: prep-apps
         shell: bash
         run: |
-          IMAGES=$(if [[ -z "${{ inputs.appsToBuild }}" ]]; then
-            find images -mindepth 1 -maxdepth 1 -type d -printf %f\\n | jq -R -s -c 'split("\n")[:-1]'
-            else "${{ inputs.appsToBuild }}" fi)
-          echo "apps=$IMAGES" >> $GITHUB_OUTPUT
+          IMAGES=$(find images -mindepth 1 -maxdepth 1 -type d -printf %f\\n | jq -R -s -c 'split("\n")[:-1]')
+          echo "apps=${${{ inputs.appsToBuild }}:-IMAGES}" >> $GITHUB_OUTPUT
 
   build-and-push-image:
     runs-on: ubuntu-latest
