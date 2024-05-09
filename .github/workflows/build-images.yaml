@@ -50,7 +50,7 @@ jobs:
         with:
           context: images/${{ matrix.image }}
           image: ${{ matrix.image }}
-          tags: latest ${{ github.sha }}
+          tags: latest
           containerfiles: |
             images/${{ matrix.image }}/Containerfile
   
